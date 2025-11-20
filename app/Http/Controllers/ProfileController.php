@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -57,4 +59,36 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+
+
+public function createUser()
+{
+    return view('users.create');   // Blade file we will create
+}
+public function index()
+{
+    $users = User::all();
+    return view('users.index', compact('users'));
+}
+
+public function storeUser(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6|confirmed',
+        'role' => 'required|in:superadmin,admin',
+    ]);
+
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => $request->role,
+    ]);
+
+    return back()->with('success', 'User added successfully.');
+}
+
 }
