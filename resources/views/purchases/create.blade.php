@@ -11,36 +11,23 @@
                 <label>Supplier Name</label>
                 <input type="text" name="supplier_name" class="form-control" required>
             </div>
-
-            {{-- <div class="mb-2">
+            <div class="mb-2">
                 <label>Medicine</label>
-                <select name="medicine_id" class="form-control select2" required>
-                    <option value="">Select Medicine</option>
+                {{-- <input type="text" id="medicine_name" class="form-control" list="medicineList"
+                        placeholder="Type medicine name" autocomplete="off" required> --}}
+                <input type="text" id="medicine_name" name="medicine_name" class="form-control" list="medicineList"
+                    placeholder="Type medicine name" autocomplete="off" required>
+
+
+                <datalist id="medicineList">
                     @foreach ($medicines as $medicine)
-                        <option value="{{ $medicine->id }}">{{ $medicine->name }} </option>
+                        <option data-id="{{ $medicine->id }}" value="{{ $medicine->name }}"></option>
                     @endforeach
-                </select>
-            </div> --}}
+                </datalist>
 
-
-
-
-
-
-                <div class="mb-2">
-                    <label>Medicine</label>
-                    <input type="text" id="medicine_name" class="form-control" list="medicineList"
-                        placeholder="Type medicine name" autocomplete="off" required>
-
-                    <datalist id="medicineList">
-                        @foreach ($medicines as $medicine)
-                            <option data-id="{{ $medicine->id }}" value="{{ $medicine->name }}"></option>
-                        @endforeach
-                    </datalist>
-
-                    <!-- Hidden input to store ID -->
-                    <input type="hidden" name="medicine_id" id="medicine_id" required>
-                </div>
+                <!-- Hidden input to store ID -->
+                <input type="hidden" name="medicine_id" id="medicine_id" required>
+            </div>
 
 
             <div class="mb-3">
@@ -101,8 +88,8 @@
 
 
 
-   <script>
-        document.getElementById('medicine_name').addEventListener('change', function () {
+    <script>
+        document.getElementById('medicine_name').addEventListener('change', function() {
             var input = this.value;
             var list = document.getElementById('medicineList').childNodes;
 
@@ -113,6 +100,5 @@
                 }
             }
         });
-  </script>
-
+    </script>
 @endsection

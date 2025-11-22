@@ -37,35 +37,36 @@
         </tr>
 
         @endforeach
-        <tr>
-            <h4 class="text-right mb-3">
-                Daily Total Sale ({{ now()->format('d-m-Y') }}):
-                <span style="color: blue; font-weight:bold;">
+        <table class="table table-bordered mt-4">
+            <tr>
+                <th>Daily Sale ({{ now()->format('d-m-Y') }})</th>
+                <th>Daily Profit ({{ now()->format('d-m-Y') }})</th>
+                <th>Monthly Sale ({{ now()->format('F Y') }})</th>
+                <th>Monthly Profit ({{ now()->format('F Y') }})</th>
+            </tr>
+
+            <tr>
+                <td style="color: blue; font-weight:bold;">
                     {{ number_format($dailySale, 2) }}
-                </span>
-            </h4>
-        </tr>
+                </td>
 
-        <tr>
-            <h4 class="text-right mb-3">
-                Daily Profit ({{ now()->format('d-m-Y') }}):
-                <span style="color: green; font-weight:bold;">
+                <td style="color: green; font-weight:bold;">
                     {{ number_format($dailyProfit, 2) }}
-                </span>
-            </h4>
+                </td>
 
-        </tr>
+                <td style="color: green; font-weight:bold;">
+                    {{ number_format($monthlySale, 2) }}
+                </td>
 
-
-
-        <tr>
-            <h4 class="text-right">
-                Total Profit ({{ now()->format('F Y') }}):
-                <span style="color: green; font-weight:bold;">
+                <td style="color: green; font-weight:bold;">
                     {{ number_format($monthlyProfit, 2) }}
-                </span>
-            </h4>
-        </tr>
+                </td>
+            </tr>
+        </table>
+
+
+
+
 
     </tbody>
 </table>

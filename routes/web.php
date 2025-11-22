@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/create', [ProfileController::class, 'createUser'])->name('users.create');
     Route::post('/users/store', [ProfileController::class, 'storeUser'])->name('users.store');
     Route::get('/users', [ProfileController::class, 'index'])->name('users.index');
+    Route::get('/stocks/search', [StockController::class, 'search'])->name('stocks.search');
+
 
     Route::resource('medicines', MedicineController::class);
 

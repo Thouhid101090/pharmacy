@@ -17,29 +17,36 @@ class SaleController extends Controller
     }
 
     public function index()
-    {
-        $sales = Sale::all();
+{
+    $sales = Sale::all();
 
-        // Daily Total Sale
-        $dailySale = Sale::whereDate('created_at', today())
-            ->sum('total_price');
-        // Daily Profit
-        $dailyProfit = Sale::whereDate('created_at', today())
+    // Daily Total Sale
+    $dailySale = Sale::whereDate('created_at', today())
+        ->sum('total_price');
+
+    // Monthly Total Sale
+    $monthlySale = Sale::whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->sum('total_price');
+
+    // Daily Profit
+    $dailyProfit = Sale::whereDate('created_at', today())
         ->get()
         ->sum(function ($sale) {
             return $sale->profit;
-
         });
-        // Current month profit
-        $monthlyProfit = Sale::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->get()
-            ->sum(function ($sale) {
-                return $sale->profit;
-            });
 
-        return view('sales.index', compact('sales', 'monthlyProfit', 'dailySale','dailyProfit'));
-    }
+    // Monthly Profit
+    $monthlyProfit = Sale::whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->get()
+        ->sum(function ($sale) {
+            return $sale->profit;
+        });
+
+    return view('sales.index', compact('sales', 'monthlyProfit', 'dailySale', 'dailyProfit', 'monthlySale'));
+}
+
 
     /**
      * Generate Invoice Number
@@ -102,6 +109,7 @@ class SaleController extends Controller
             'quantity'      => 'required|integer|min:1',
             'total_price'   => 'required|numeric|min:0',
         ]);
+
 
         $stock = Stock::where('medicine_id', $request->medicine_id)->first();
         if (!$stock || $stock->quantity < $request->quantity) {

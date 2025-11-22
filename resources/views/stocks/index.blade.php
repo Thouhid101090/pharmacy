@@ -11,13 +11,21 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+    <form action="{{ route('stocks.search') }}" method="GET" class="mb-3">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" name="query" class="form-control" placeholder="Search medicine...">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
                 <th>#</th>
                 <th>Medicine Name</th>
                 <th>Quantity</th>
-                
+                <th>Supplier</th>
+
                 <th>Expiry Date</th>
             </tr>
         </thead>
@@ -27,6 +35,7 @@
                     <td>{{ $stock->id }}</td>
                     <td>{{ $stock->medicine->name }}</td>
                     <td>{{ $stock->quantity }}</td>
+                    <td>{{ $stock->medicine->company_name}}</td>
                     <td>
                         @if($stock->expiry_date && \Carbon\Carbon::parse($stock->expiry_date)->isPast())
                             <span class="badge bg-danger">Expired</span>
