@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container col-12 col-md-6 pb-5">
+
     <h3 class="mb-4">➕ Add Account Entry</h3>
 
     <form action="{{ route('accounts.store') }}" method="POST">
@@ -35,8 +36,8 @@
             <input type="number" step="0.01" name="amount" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-success">Save</button>
-        <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-success w-100 mb-2">Save</button>
+        <a href="{{ route('accounts.index') }}" class="btn btn-secondary w-100">Cancel</a>
     </form>
 </div>
 

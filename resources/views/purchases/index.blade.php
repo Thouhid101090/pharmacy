@@ -1,70 +1,74 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h2>Purchases</h2>
-        <a href="{{ route('purchases.create') }}" class="btn btn-primary mb-3">New Purchase</a>
+<div class="container mt-3">
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        <table class="table table-responsive table-bordered">
+    <h2>Purchases</h2>
+    <a href="{{ route('purchases.create') }}" class="btn btn-primary mb-3">New Purchase</a>
+
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    {{-- SUMMARY SECTION --}}
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
             <tr>
-                <th> Today’s Purchase:({{ now()->format('d-m-Y') }})</th>
-                <th>Monthly Purchase:({{ now()->format('F Y') }})</th>
+                <th>Today’s Purchase ({{ now()->format('d-m-Y') }})</th>
+                <th>Monthly Purchase ({{ now()->format('F Y') }})</th>
             </tr>
-
             <tr>
-                <td style="color: blue; font-weight:bold;"><strong>{{ number_format($dailyPurchase, 2) }}</strong></td>
-                <td  style="color: green; font-weight:bold;"><strong>{{ number_format($monthlyPurchase, 2) }}</strong></td>
-
-
+                <td style="color: blue; font-weight:bold;">
+                    {{ number_format($dailyPurchase, 2) }}
+                </td>
+                <td style="color: green; font-weight:bold;">
+                    {{ number_format($monthlyPurchase, 2) }}
+                </td>
             </tr>
         </table>
+    </div>
 
-
-        <table class="table table-responsive table-bordered">
-            <thead>
+    {{-- PURCHASE TABLE --}}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="text-center">
                 <tr>
                     <th>Invoice</th>
                     <th>Medicine</th>
                     <th>Supplier</th>
-                    <th>Purchase Date</th>
+                    <th>Date</th>
                     <th>Qty</th>
                     <th>Price</th>
                     <th>Total</th>
                     <th>Expiry</th>
-                    {{-- <th>Action</th> --}}
                 </tr>
             </thead>
+
             <tbody>
                 @foreach ($purchases as $purchase)
-                    <tr>
-                        <td>{{ $purchase->invoice_no }}</td>
-                        <td>{{ $purchase->medicine->name }}</td>
-                        <td>{{ $purchase->supplier_name }}</td>
-                        <td>{{ $purchase->created_at }}</td>
-                        <td>{{ $purchase->quantity }}</td>
-                        <td>{{ $purchase->price }}</td>
-                        <td>{{ $purchase->total_amount }}</td>
-                        <td>{{ $purchase->expiry_date }}</td>
-                        {{-- <td>
-                    <a href="{{ route('purchases.edit', $purchase->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('purchases.destroy', $purchase->id) }}" method="POST" style="display:inline-block;">
-                        @csrf @method('DELETE')
-                        <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this purchase?')">Delete</button>
-                    </form>
-                </td> --}}
-                    </tr>
-                @endforeach
+                <tr>
+                    <td>{{ $purchase->invoice_no }}</td>
+                    <td>{{ $purchase->medicine->name }}</td>
+                    <td>{{ $purchase->supplier_name }}</td>
 
+                    {{-- Short Date Format for Mobile --}}
+                    <td>{{ $purchase->created_at->format('d-m-Y') }}</td>
+
+                    <td>{{ $purchase->quantity }}</td>
+                    <td>{{ $purchase->price }}</td>
+                    <td>{{ $purchase->total_amount }}</td>
+
+                    {{-- Short expiry format --}}
+                    <td>{{ \Carbon\Carbon::parse($purchase->expiry_date)->format('d-m-Y') }}</td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
-
-
-        <div class="d-flex justify-content-center mt-3">
-            {{ $purchases->links() }}
-        </div>
-
     </div>
+
+    <div class="d-flex justify-content-center mt-3">
+        {{ $purchases->links() }}
+    </div>
+
+</div>
 @endsection
