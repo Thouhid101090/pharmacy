@@ -18,8 +18,7 @@ class SaleController extends Controller
 
     public function index()
 {
-    $sales = Sale::all();
-
+    $sales = Sale::latest()->paginate(10);
     // Daily Total Sale
     $dailySale = Sale::whereDate('created_at', today())
         ->sum('total_price');
