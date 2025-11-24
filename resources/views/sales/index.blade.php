@@ -7,8 +7,33 @@
 @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
+<table class="table table-responsive table-bordered mt-4">
+    <tr>
+        <th>Daily Sale ({{ now()->format('d-m-Y') }})</th>
+        <th>Daily Profit ({{ now()->format('d-m-Y') }})</th>
+        <th>Monthly Sale ({{ now()->format('F Y') }})</th>
+        <th>Monthly Profit ({{ now()->format('F Y') }})</th>
+    </tr>
 
-<table class="table table-bordered mt-3">
+    <tr>
+        <td style="color: blue; font-weight:bold;">
+            {{ number_format($dailySale, 2) }}
+        </td>
+
+        <td style="color: green; font-weight:bold;">
+            {{ number_format($dailyProfit, 2) }}
+        </td>
+
+        <td style="color: green; font-weight:bold;">
+            {{ number_format($monthlySale, 2) }}
+        </td>
+
+        <td style="color: green; font-weight:bold;">
+            {{ number_format($monthlyProfit, 2) }}
+        </td>
+    </tr>
+</table>
+<table class="table table-responsive table-bordered mt-3">
     <thead>
         <tr>
             <th>ID</th>
@@ -37,32 +62,7 @@
         </tr>
 
         @endforeach
-        <table class="table table-bordered mt-4">
-            <tr>
-                <th>Daily Sale ({{ now()->format('d-m-Y') }})</th>
-                <th>Daily Profit ({{ now()->format('d-m-Y') }})</th>
-                <th>Monthly Sale ({{ now()->format('F Y') }})</th>
-                <th>Monthly Profit ({{ now()->format('F Y') }})</th>
-            </tr>
 
-            <tr>
-                <td style="color: blue; font-weight:bold;">
-                    {{ number_format($dailySale, 2) }}
-                </td>
-
-                <td style="color: green; font-weight:bold;">
-                    {{ number_format($dailyProfit, 2) }}
-                </td>
-
-                <td style="color: green; font-weight:bold;">
-                    {{ number_format($monthlySale, 2) }}
-                </td>
-
-                <td style="color: green; font-weight:bold;">
-                    {{ number_format($monthlyProfit, 2) }}
-                </td>
-            </tr>
-        </table>
 
 
 

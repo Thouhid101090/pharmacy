@@ -8,8 +8,22 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        <table class="table table-responsive table-bordered">
+            <tr>
+                <th> Today’s Purchase:({{ now()->format('d-m-Y') }})</th>
+                <th>Monthly Purchase:({{ now()->format('F Y') }})</th>
+            </tr>
 
-        <table class="table table-bordered">
+            <tr>
+                <td style="color: blue; font-weight:bold;"><strong>{{ number_format($dailyPurchase, 2) }}</strong></td>
+                <td  style="color: green; font-weight:bold;"><strong>{{ number_format($monthlyPurchase, 2) }}</strong></td>
+
+
+            </tr>
+        </table>
+
+
+        <table class="table table-responsive table-bordered">
             <thead>
                 <tr>
                     <th>Invoice</th>
@@ -42,13 +56,8 @@
                     </form>
                 </td> --}}
                     </tr>
-
                 @endforeach
-                <tr>
-                    <h4>Today’s Purchase: <strong>{{ number_format($dailyPurchase, 2) }}</strong></h4>
-                    <h4>Monthly Purchase: <strong>{{ number_format($monthlyPurchase, 2) }}</strong></h4>
 
-                </tr>
             </tbody>
         </table>
 
