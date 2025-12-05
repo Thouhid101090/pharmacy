@@ -48,7 +48,7 @@
                 @foreach ($purchases as $purchase)
                 <tr>
                     <td>{{ $purchase->invoice_no }}</td>
-                    <td>{{ $purchase->medicine->name }}</td>
+                    <td>{{ $purchase->medicine->name ?? 'Deleted Medicine' }}</td>
                     <td>{{ $purchase->supplier_name }}</td>
 
                     {{-- Short Date Format for Mobile --}}

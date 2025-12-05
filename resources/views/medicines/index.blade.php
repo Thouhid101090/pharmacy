@@ -26,6 +26,7 @@
             @foreach($medicines as $medicine)
             <tr>
                 <td>{{ $loop->iteration }}</td>
+                {{-- <td>{{ $medicine->id }}</td> --}}
                 <td>{{ $medicine->name }}</td>
                 <td>{{ $medicine->generic_name }}</td>
                 <td>{{ $medicine->company_name }}</td>
@@ -33,11 +34,11 @@
 
                 <td>
                     <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline-block;">
+                    {{-- <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this medicine?')">Delete</button>
-                    </form>
+                    </form> --}}
                 </td>
             </tr>
             @endforeach

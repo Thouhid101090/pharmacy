@@ -17,11 +17,11 @@
         <h3>Report Result:</h3>
         <table class="table">
             <tr>
-                <th>Total Sales</th>
+                <th>Total Saling Price</th>
                 <td>{{ number_format($totalSales, 2) }}</td>
             </tr>
             <tr>
-                <th>Total Purchases</th>
+                <th>Total Purchase Price</th>
                 <td>{{ number_format($totalPurchases, 2) }}</td>
             </tr>
             <tr>

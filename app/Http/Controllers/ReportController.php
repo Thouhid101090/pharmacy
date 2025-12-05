@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Sale;
-use App\Models\Purchase;
-use App\Models\Stock;
-use Carbon\Carbon;
 use DB;
+use Carbon\Carbon;
+use App\Models\Sale;
+use App\Models\Stock;
+use App\Models\Purchase;
+use App\Models\ExtraIncome;
+use Illuminate\Http\Request;
 
 
 
@@ -86,7 +87,7 @@ $purchases = Purchase::with('medicine')
         $sales = Sale::with('medicine')
         ->whereBetween('created_at', [$from, $to])
             ->get();
-
+             // Total Extra Income
         $totalSales = 0;
         $totalPurchases = 0;
         $profit = 0;
