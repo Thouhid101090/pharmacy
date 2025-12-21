@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Sale;
+use App\Models\Stock;
 use App\Models\Medicine;
 use Illuminate\Http\Request;
-use App\Models\Stock;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
@@ -101,35 +102,86 @@ class SaleController extends Controller
     /**
      * Store Sale (Form Submission)
      */
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'medicine_id'   => 'required|exists:medicines,id',
+    //         'quantity'      => 'required|integer|min:1',
+    //         'total_price'   => 'required|numeric|min:0',
+    //     ]);
+
+
+    //     $stock = Stock::where('medicine_id', $request->medicine_id)->first();
+    //     if (!$stock || $stock->quantity < $request->quantity) {
+    //         return back()->with('error', 'Insufficient stock');
+    //     }
+
+    //     $invoiceNo = $this->generateInvoiceNo();
+
+    //     $sale = Sale::create([
+    //         'invoice_no'    => $invoiceNo,
+    //         'medicine_id'   => $request->medicine_id,
+    //         'quantity'      => $request->quantity,
+
+    //         'total_price'   => $request->total_price,
+    //         'selling_price' => $request->total_price / $request->quantity,
+    //     ]);
+
+    //     // Update stock
+    //     $stock->quantity -= $request->quantity;
+    //     $stock->save();
+
+    //     return back()->with('success', "Sale recorded successfully. Invoice: {$invoiceNo}");
+    // }
+
     public function store(Request $request)
     {
         $request->validate([
-            'medicine_id'   => 'required|exists:medicines,id',
-            'quantity'      => 'required|integer|min:1',
-            'total_price'   => 'required|numeric|min:0',
+            'medicine_id'   => 'required|array',
+            'medicine_id.*' => 'required|exists:medicines,id',
+            'quantity'      => 'required|array',
+            'quantity.*'    => 'required|integer|min:1',
+            'total_price'   => 'required|array',
+            'total_price.*' => 'required|numeric|min:0',
         ]);
 
+        try {
+            return DB::transaction(function () use ($request) {
+                $invoiceNo = $this->generateInvoiceNo();
 
-        $stock = Stock::where('medicine_id', $request->medicine_id)->first();
-        if (!$stock || $stock->quantity < $request->quantity) {
-            return back()->with('error', 'Insufficient stock');
+                foreach ($request->medicine_id as $index => $medicineId) {
+                    $qtyRequested = $request->quantity[$index];
+                    $totalPrice = $request->total_price[$index];
+
+                    // 1. Check Stock for this specific medicine
+                    $stock = Stock::where('medicine_id', $medicineId)->first();
+
+                    if (!$stock || $stock->quantity < $qtyRequested) {
+                        $medicine = Medicine::find($medicineId);
+                        // Using a manual exception to trigger a rollback
+                        throw new \Exception("Insufficient stock for: " . ($medicine->name ?? 'Unknown Medicine'));
+                    }
+
+                    // 2. Create the Sale
+                    Sale::create([
+                        'invoice_no'    => $invoiceNo,
+                        'medicine_id'   => $medicineId,
+                        'quantity'      => $qtyRequested,
+                        'total_price'   => $totalPrice,
+                        'selling_price' => $totalPrice / $qtyRequested, // Auto-calculation
+                    ]);
+
+                    // 3. Update stock
+                    $stock->quantity -= $qtyRequested;
+                    $stock->save();
+                }
+
+                return redirect()->route('sales.index')
+                    ->with('success', "Sale recorded successfully. Invoice: {$invoiceNo}");
+            });
+
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage())->withInput();
         }
-
-        $invoiceNo = $this->generateInvoiceNo();
-
-        $sale = Sale::create([
-            'invoice_no'    => $invoiceNo,
-            'medicine_id'   => $request->medicine_id,
-            'quantity'      => $request->quantity,
-
-            'total_price'   => $request->total_price,
-            'selling_price' => $request->total_price / $request->quantity,
-        ]);
-
-        // Update stock
-        $stock->quantity -= $request->quantity;
-        $stock->save();
-
-        return back()->with('success', "Sale recorded successfully. Invoice: {$invoiceNo}");
     }
 }

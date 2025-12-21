@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('medicine_id'); // link to medicines
-            $table->string('invoice_no')->unique();
+            $table->string('invoice_no');
             $table->string('supplier_name');
             $table->date('purchase_date')->nullable();
             $table->integer('quantity');
