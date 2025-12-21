@@ -49,6 +49,24 @@ class MedicineController extends Controller
         return redirect()->route('medicines.index')->with('success', 'Medicine updated successfully.');
     }
 
+
+
+    public function search(Request $request)
+{
+    // 1. Get the search term from the input name="query"
+    $searchTerm = $request->input('query');
+
+    // 2. Perform the search
+    $medicines = Medicine::where('name', 'LIKE', "%{$searchTerm}%")
+        ->orWhere('company_name', 'LIKE', "%{$searchTerm}%")
+        ->latest()
+        ->paginate(10)
+        ->withQueryString(); // This keeps 'query' in the pagination links
+
+    // 3. Return the same index view with the filtered results
+    return view('medicines.index', compact('medicines', 'searchTerm'));
+}
+
     public function destroy(Medicine $medicine)
     {
         $medicine->delete();
@@ -84,8 +102,4 @@ class MedicineController extends Controller
 
         return redirect()->route('medicines.index')->with('success', 'All medicines added successfully.');
     }
-
-
-
-
 }

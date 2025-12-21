@@ -25,7 +25,6 @@
                 <th>Medicine Name</th>
                 <th>Quantity</th>
                 <th>Supplier</th>
-
                 <th>Expiry Date</th>
             </tr>
         </thead>

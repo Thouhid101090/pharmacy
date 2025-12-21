@@ -14,6 +14,11 @@ class Medicine extends Model
         'generic_name',
         'company_name',
         'use_for',
-        
+
     ];
+    public function purchases()
+{
+    return $this->hasMany(Purchase::class);
+}
+
 }

@@ -26,6 +26,7 @@
                     <option data-id="{{ $medicine->id }}" value="{{ $medicine->name }}"></option>
                 @endforeach
             </datalist>
+            
 
             <input type="hidden" name="medicine_id" id="medicine_id" required>
         </div>

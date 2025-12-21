@@ -59,7 +59,7 @@
                     <td>{{ $purchase->total_amount }}</td>
 
                     {{-- Short expiry format --}}
-                    <td>{{ \Carbon\Carbon::parse($purchase->expiry_date)->format('d-m-Y') }}</td>
+                    <td>{{ ($purchase->expiry_date) }}</td>
                 </tr>
                 @endforeach
             </tbody>

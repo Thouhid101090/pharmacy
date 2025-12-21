@@ -40,9 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/stocks/search', [StockController::class, 'search'])->name('stocks.search');
 
 
-    Route::resource('medicines', MedicineController::class);
 
     Route::get('/medicines/search', [MedicineController::class, 'search'])->name('medicines.search');
+    Route::resource('medicines', MedicineController::class);
+
 
     Route::resource('purchases', PurchaseController::class);
 

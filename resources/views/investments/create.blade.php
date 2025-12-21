@@ -2,7 +2,13 @@
 
 @section('content')
 <div class="container">
-    <h2>Add Investment</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Add Investment</h2>
+
+        <a href="{{ route('investments.index') }}" class="btn btn-primary">
+            List
+        </a>
+    </div>
 
     <form action="{{ route('investments.store') }}" method="POST">
         @csrf

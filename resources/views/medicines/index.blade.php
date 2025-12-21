@@ -2,6 +2,12 @@
 
 @section('content')
 <div class="container">
+    <form action="{{ route('medicines.search') }}" method="GET" class="mb-3">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" name="query" class="form-control" placeholder="Search medicine...">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
     <div class="d-flex justify-content-between">
         <h2 class="mb-4">Medicines</h2>
         <a href="{{ route('medicines.create') }}" class="btn btn-primary mb-3">+</a>
@@ -16,21 +22,21 @@
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Generic</th>
+                {{-- <th>Generic</th> --}}
                 <th>Company</th>
-                <th>Use For</th>
+                {{-- <th>Use For</th> --}}
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach($medicines as $medicine)
             <tr>
-                <td>{{ $loop->iteration }}</td>
-                {{-- <td>{{ $medicine->id }}</td> --}}
+                {{-- <td>{{ $loop->iteration }}</td> --}}
+                <td>{{ $medicine->id }}</td>
                 <td>{{ $medicine->name }}</td>
-                <td>{{ $medicine->generic_name }}</td>
+                {{-- <td>{{ $medicine->generic_name }}</td> --}}
                 <td>{{ $medicine->company_name }}</td>
-                <td>{{ $medicine->use_for }}</td>
+                {{-- <td>{{ $medicine->use_for }}</td> --}}
 
                 <td>
                     <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-sm btn-warning">Edit</a>

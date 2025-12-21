@@ -16,9 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('medicine_id'); // link to medicines
             $table->string('invoice_no')->unique();
             $table->string('supplier_name');
-            $table->date('purchase_date');
+            $table->date('purchase_date')->nullable();
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2)->nullable();
             $table->decimal('total_amount', 10, 2);
             $table->date('expiry_date')->nullable();
             $table->timestamps();
