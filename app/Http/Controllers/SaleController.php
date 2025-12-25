@@ -17,35 +17,52 @@ class SaleController extends Controller
         return view('sales.create', compact('medicines'));
     }
 
-    public function index()
-{
-    $sales = Sale::latest()->paginate(10);
-    // Daily Total Sale
-    $dailySale = Sale::whereDate('created_at', today())
-        ->sum('total_price');
+    public function index(Request $request)
+    {
+        $sales = Sale::latest()->paginate(10);
+        // Daily Total Sale
+        $dailySale = Sale::whereDate('created_at', today())
+            ->sum('total_price');
 
-    // Monthly Total Sale
-    $monthlySale = Sale::whereMonth('created_at', now()->month)
-        ->whereYear('created_at', now()->year)
-        ->sum('total_price');
+        // Monthly Total Sale
+        $monthlySale = Sale::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('total_price');
 
-    // Daily Profit
-    $dailyProfit = Sale::whereDate('created_at', today())
-        ->get()
-        ->sum(function ($sale) {
-            return $sale->profit;
-        });
+        // Daily Profit
+        $dailyProfit = Sale::whereDate('created_at', today())
+            ->get()
+            ->sum(function ($sale) {
+                return $sale->profit;
+            });
 
-    // Monthly Profit
-    $monthlyProfit = Sale::whereMonth('created_at', now()->month)
-        ->whereYear('created_at', now()->year)
-        ->get()
-        ->sum(function ($sale) {
-            return $sale->profit;
-        });
+        // Monthly Profit
+        $monthlyProfit = Sale::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->get()
+            ->sum(function ($sale) {
+                return $sale->profit;
+            });
 
-    return view('sales.index', compact('sales', 'monthlyProfit', 'dailySale', 'dailyProfit', 'monthlySale'));
-}
+        // Start the query with the medicine relationship loaded
+        $query = Sale::query()->with('medicine');
+
+        // Check if there is a search term
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+
+            $query->where(function ($q) use ($search) {
+                $q->orWhereHas('medicine', function ($m) use ($search) {
+                    $m->where('name', 'like', "%{$search}%");   // Search Medicine Name
+                });
+            });
+        }
+
+        // Get the results with pagination
+        $sales = $query->latest()->paginate(15);
+
+        return view('sales.index', compact('sales', 'monthlyProfit', 'dailySale', 'dailyProfit', 'monthlySale'));
+    }
 
 
     /**
@@ -102,37 +119,7 @@ class SaleController extends Controller
     /**
      * Store Sale (Form Submission)
      */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'medicine_id'   => 'required|exists:medicines,id',
-    //         'quantity'      => 'required|integer|min:1',
-    //         'total_price'   => 'required|numeric|min:0',
-    //     ]);
 
-
-    //     $stock = Stock::where('medicine_id', $request->medicine_id)->first();
-    //     if (!$stock || $stock->quantity < $request->quantity) {
-    //         return back()->with('error', 'Insufficient stock');
-    //     }
-
-    //     $invoiceNo = $this->generateInvoiceNo();
-
-    //     $sale = Sale::create([
-    //         'invoice_no'    => $invoiceNo,
-    //         'medicine_id'   => $request->medicine_id,
-    //         'quantity'      => $request->quantity,
-
-    //         'total_price'   => $request->total_price,
-    //         'selling_price' => $request->total_price / $request->quantity,
-    //     ]);
-
-    //     // Update stock
-    //     $stock->quantity -= $request->quantity;
-    //     $stock->save();
-
-    //     return back()->with('success', "Sale recorded successfully. Invoice: {$invoiceNo}");
-    // }
 
     public function store(Request $request)
     {
@@ -179,9 +166,46 @@ class SaleController extends Controller
                 return redirect()->route('sales.index')
                     ->with('success', "Sale recorded successfully. Invoice: {$invoiceNo}");
             });
-
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();
         }
+    }
+
+    public function edit(Sale $sale)
+    {
+        $medicines = Medicine::all();
+        return view('sales.edit', compact('sale', 'medicines'));
+    }
+
+    public function update(Request $request, Sale $sale)
+    {
+        $request->validate([
+            'medicine_id' => 'required',
+            'quantity' => 'required|integer|min:1',
+            'total_price' => 'required|numeric',
+        ]);
+
+        $stock = Stock::where('medicine_id', $request->medicine_id)->first();
+
+        // Calculate available stock (Current Stock + what was already sold in this record)
+        $availableStock = $stock->quantity + $sale->quantity;
+
+        if ($availableStock < $request->quantity) {
+            return back()->with('error', 'Insufficient stock. Available: ' . $availableStock);
+        }
+
+        // Adjust Stock
+        $stock->quantity = $availableStock - $request->quantity;
+        $stock->save();
+
+        // Update Sale
+        $sale->update([
+            'medicine_id'   => $request->medicine_id,
+            'quantity'      => $request->quantity,
+            'total_price'   => $request->total_price,
+            'selling_price' => $request->total_price / $request->quantity,
+        ]);
+
+        return redirect()->route('sales.index')->with('success', 'Sale updated successfully');
     }
 }

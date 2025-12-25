@@ -11,7 +11,22 @@
         <div class="alert alert-success shadow-sm">{{ session('success') }}</div>
     @endif
 
-    {{-- SUMMARY SECTION - Responsive Cards --}}
+    {{-- Search Form (unchanged) --}}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-2">
+            <form action="{{ route('sales.index') }}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control border-0 shadow-none" placeholder="Search medicine or customer..." value="{{ request('search') }}">
+                    <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i> Search</button>
+                    @if(request('search'))
+                        <a href="{{ route('sales.index') }}" class="btn btn-outline-secondary d-flex align-items-center">Clear</a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Summary Section (unchanged) --}}
     <div class="row g-2 mb-4">
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm bg-primary text-white text-center p-2 h-100">
@@ -39,7 +54,6 @@
         </div>
     </div>
 
-    {{-- SALES TABLE - Responsive Data Layout --}}
     <div class="card border-0 shadow-sm overflow-hidden">
         {{-- Table view for Desktop --}}
         <div class="table-responsive d-none d-md-block">
@@ -52,6 +66,7 @@
                         <th>Total</th>
                         <th>Profit</th>
                         <th>Date</th>
+                        <th>Action</th> {{-- New Column --}}
                     </tr>
                 </thead>
                 <tbody class="text-center">
@@ -63,6 +78,11 @@
                         <td class="fw-bold">{{ number_format($sale->total_price, 2) }}</td>
                         <td class="text-success fw-bold">{{ number_format($sale->profit, 2) }}</td>
                         <td class="small">{{ $sale->created_at->format('d-m-Y') }}</td>
+                        <td>
+                            <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -80,12 +100,15 @@
                     </div>
                     <div class="text-end">
                         <div class="fw-bold">TK {{ number_format($sale->total_price, 2) }}</div>
-                        <small class="text-success fw-bold">Profit: {{ number_format($sale->profit, 2) }}</small>
+                        {{-- Added Edit Icon for Mobile --}}
+                        <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-sm btn-light border py-0 px-2 mt-1">
+                            <i class="bi bi-pencil text-primary"></i> Edit
+                        </a>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded small">
                     <span>Qty: <strong>{{ $sale->quantity }}</strong></span>
-                    <span>Unit: <strong>{{ number_format($sale->selling_price, 2) }}</strong></span>
+                    <span class="text-success fw-bold">Profit: {{ number_format($sale->profit, 2) }}</span>
                 </div>
             </div>
             @endforeach
@@ -96,11 +119,4 @@
         {{ $sales->links() }}
     </div>
 </div>
-
-<style>
-    @media (max-width: 767.98px) {
-        .container { padding-left: 10px; padding-right: 10px; }
-        h5 { font-size: 1.1rem; }
-    }
-</style>
 @endsection

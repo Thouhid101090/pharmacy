@@ -12,6 +12,26 @@
         <div class="alert alert-success shadow-sm">{{ session('success') }}</div>
     @endif
 
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-2">
+            <form action="{{ route('purchases.index') }}" method="GET">
+                <div class="input-group">
+                    <input type="text"
+                           name="search"
+                           class="form-control border-0 shadow-none"
+                           placeholder="Search by medicine or supplier..."
+                           value="{{ request('search') }}">
+                    <button class="btn btn-primary px-4" type="submit">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                    @if(request('search'))
+                        <a href="{{ route('purchases.index') }}" class="btn btn-outline-secondary">Clear</a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- SUMMARY SECTION - Responsive Cards --}}
     <div class="row g-2 mb-4">
         <div class="col-6 col-md-6">
@@ -42,6 +62,7 @@
                         <th class="text-center">Qty</th>
                         <th>Total</th>
                         <th>Expiry</th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,6 +85,11 @@
                             @else
                                 -
                             @endif
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ route('purchases.edit', $purchase->id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
                         </td>
                     </tr>
                     @endforeach
