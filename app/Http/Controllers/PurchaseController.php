@@ -14,7 +14,7 @@ class PurchaseController extends Controller
 {
     public function index(Request $request)
     {
-        $purchases = Purchase::latest()->paginate(10);
+        // $purchases = Purchase::latest()->paginate(10);
 
         // Daily Purchase Total
         $dailyPurchase = Purchase::whereDate('created_at', today())
@@ -36,7 +36,7 @@ class PurchaseController extends Controller
                     });
             });
         }
-        $purchases = $query->latest()->paginate(10);
+        $purchases = $query->latest()->paginate(100);
 
         return view('purchases.index', compact('purchases', 'dailyPurchase', 'monthlyPurchase'));
     }

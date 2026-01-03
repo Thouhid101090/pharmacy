@@ -5,5 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExtraIncome extends Model
 {
-    protected $fillable = ['description', 'amount'];
+    protected $fillable = [
+        'description',
+        'amount',
+    ];
 }

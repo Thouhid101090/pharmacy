@@ -45,14 +45,21 @@ class ExtraIncomeController extends Controller
 
     public function store(Request $request)
     {
-        ExtraIncome::create([
-            'description' => $request->description,
-            'amount' => $request->amount,
+        $descriptions = $request->description;
+        $amounts = $request->amount;
 
-        ]);
+        foreach ($descriptions as $index => $description) {
+            ExtraIncome::create([
+                'description' => $description,
+                'amount'      => $amounts[$index],
+            ]);
+        }
 
-        return redirect()->route('extra_income.index')->with('success', 'Extra income added successfully!');
+        return redirect()
+            ->route('extra_income.index')
+            ->with('success', 'Extra income added successfully!');
     }
+
 
     public function destroy($id)
     {
