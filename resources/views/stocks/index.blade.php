@@ -31,7 +31,7 @@
                             <th class="text-center">Quantity</th>
                             <th>Supplier</th>
                             <th>Expiry Status</th>
-                            <th class="text-end pe-3">Action</th>
+                            {{-- <th class="text-end pe-3">Action</th> --}}
                         </tr>
                         </tr>
                     </thead>
@@ -61,7 +61,7 @@
                                         <span class="text-muted">{{ $stock->expiry_date ?? '-' }}</span>
                                     @endif
                                 </td>
-                                <td class="text-end pe-3">
+                                {{-- <td class="text-end pe-3">
                                     <form action="{{ route('stocks.destroy', $stock->id) }}" method="POST"
                                         onsubmit="return confirm('Delete this stock record? This action cannot be undone.');">
                                         @csrf
@@ -70,7 +70,7 @@
                                             <i class="bi bi-trash">Delete</i>
                                         </button>
                                     </form>
-                                </td>
+                                </td> --}}
                             </tr>
                         @empty
                             <tr>
