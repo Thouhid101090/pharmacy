@@ -158,9 +158,16 @@ class PurchaseController extends Controller
 
 
 
-    public function destroy(Purchase $purchase)
+    public function destroy($id)
     {
+        $purchase = Purchase::findOrFail($id);
+
+        // Optional: If you want to revert stock when a purchase is deleted
+        // $medicine = $purchase->medicine;
+        // $medicine->decrement('stock', $purchase->quantity);
+
         $purchase->delete();
+
         return redirect()->route('purchases.index')->with('success', 'Purchase deleted successfully.');
     }
 }

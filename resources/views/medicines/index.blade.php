@@ -41,6 +41,15 @@
                             <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-sm btn-outline-warning px-3">
                                 Edit
                             </a>
+                            <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure?');"
+                                class="d-inline">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-sm btn-danger px-3" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                  <i class="bi bi-trash">Delete</i>
+                              </button>
+                          </form>
                         </td>
                     </tr>
                     @endforeach
@@ -58,10 +67,21 @@
                             <i class="bi bi-building"></i> {{ $medicine->company_name }}
                         </p>
                     </div>
-                    <div>
-                        <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-sm btn-warning shadow-sm">
-                            Edit
+                    <div class="btn-group shadow-sm" role="group">
+                        <a href="{{ route('medicines.edit', $medicine->id) }}"
+                           class="btn btn-sm btn-warning text-white px-3">
+                            <i class="bi bi-pencil-square">Edit</i>
                         </a>
+
+                        <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST"
+                              onsubmit="return confirm('Are you sure?');"
+                              class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger px-3" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                <i class="bi bi-trash">Delete</i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             @empty

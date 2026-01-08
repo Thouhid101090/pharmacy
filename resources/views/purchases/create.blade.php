@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-success btn-lg w-100 py-3 fw-bold shadow">
+                    <button type="submit" id="submitBtn" class="btn btn-success btn-lg w-100 py-3 fw-bold shadow">
                         Save Bulk Purchase Record
                     </button>
                 </div>
@@ -100,9 +100,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const purchaseForm = document.getElementById('purchaseForm');
+    const submitBtn = document.getElementById('submitBtn');
     const purchaseRows = document.getElementById('purchase-rows');
     const addMoreBtn = document.getElementById('addMore');
     const grandTotalDisplay = document.getElementById('grandTotalDisplay');
+
+    // --- DISABLE BUTTON ON SUBMIT ---
+    purchaseForm.addEventListener('submit', function (e) {
+        if (purchaseForm.checkValidity()) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Saving Record...
+            `;
+        }
+    });
 
     function calculateGrandTotal() {
         let grandTotal = 0;
@@ -136,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="col-12 col-md-1 d-flex align-items-end justify-content-md-center">
                         <button type="button" class="btn btn-outline-danger remove-row w-100 w-md-auto">
-                            <span class="d-md-none">Remove Item</span>
                              ×
                         </button>
                     </div>

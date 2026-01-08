@@ -23,4 +23,15 @@ class StockController extends Controller
 
         return view('stocks.index', compact('stocks'));
     }
+    public function destroy($id)
+    {
+        try {
+            $stock = Stock::findOrFail($id);
+            $stock->delete();
+
+            return redirect()->back()->with('success', 'Stock item removed successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error removing stock item.');
+        }
+    }
 }

@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow">
+                    <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow">
                         Confirm & Save Sale
                     </button>
                 </div>
@@ -88,9 +88,20 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const saleForm = document.getElementById('saleForm');
+    const submitBtn = document.getElementById('submitBtn');
     const saleRows = document.getElementById('sale-rows');
     const addMoreBtn = document.getElementById('addMore');
     const grandTotalDisplay = document.getElementById('grandTotalDisplay');
+
+    // Handle Form Submission - Disable button to prevent double clicks
+    saleForm.addEventListener('submit', function () {
+        // Only disable if the form passes browser validation
+        if (saleForm.checkValidity()) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...`;
+        }
+    });
 
     function calculateGrandTotal() {
         let grandTotal = 0;
@@ -141,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target.classList.contains('medicine-input')) {
             const val = e.target.value;
             const options = document.getElementById('medicineList').options;
-            const hiddenInput = e.target.closest('.col-12').querySelector('.medicine-id-hidden');
+            const hiddenInput = e.target.closest('.sale-item-row').querySelector('.medicine-id-hidden');
             hiddenInput.value = "";
             for (let i = 0; i < options.length; i++) {
                 if (options[i].value === val) {
@@ -156,18 +167,9 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <style>
-    /* Styling for a "Card" feel on mobile */
     @media (max-width: 767.98px) {
         .sale-item-row {
-            border-left: 4px solid #0d6efd !important; /* Blue accent on mobile */
-        }
-        .grand-total-container {
-            position: sticky;
-            bottom: 0;
-            background: white;
-            padding: 10px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
+            border-left: 4px solid #0d6efd !important;
         }
     }
 </style>
