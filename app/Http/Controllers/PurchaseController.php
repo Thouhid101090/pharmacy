@@ -126,30 +126,65 @@ class PurchaseController extends Controller
         return view('purchases.edit', compact('purchase', 'medicines'));
     }
 
+    // public function update(Request $request, Purchase $purchase)
+    // {
+    //     $request->validate([
+    //         'supplier_name' => 'required|string',
+    //         'medicine_id'   => 'required',
+    //         'quantity'      => 'required|integer|min:1',
+    //         'total_amount'  => 'required|numeric',
+    //         'expiry_date'   => 'nullable|date',
+    //     ]);
+
+    //     // 1. Adjust Stock
+    //     $stock = Stock::where('medicine_id', $purchase->medicine_id)->first();
+
+    //     // Reverse the old purchase quantity from stock, then add the new quantity
+    //     $stock->quantity = ($stock->quantity - $purchase->quantity) + $request->quantity;
+    //     $stock->save();
+
+    //     // 2. Update the Purchase Record
+    //     $purchase->update([
+    //         'supplier_name' => $request->supplier_name,
+    //         'medicine_id'   => $request->medicine_id,
+    //         'quantity'      => $request->quantity,
+    //         'total_amount'  => $request->total_amount,
+    //         'purchase_price' => $request->total_amount / $request->quantity,
+    //         'expiry_date'   => $request->expiry_date,
+    //     ]);
+
+    //     return redirect()->route('purchases.index')->with('success', 'Purchase record updated successfully.');
+    // }
     public function update(Request $request, Purchase $purchase)
     {
         $request->validate([
             'supplier_name' => 'required|string',
             'medicine_id'   => 'required',
             'quantity'      => 'required|integer|min:1',
-            'total_amount'  => 'required|numeric',
+            'total_amount'  => 'required|numeric|min:0',
             'expiry_date'   => 'nullable|date',
         ]);
 
-        // 1. Adjust Stock
+        // 1. Calculate the unit price (Cost per Unit)
+        // We calculate this on the server side to ensure accuracy
+        $unitPrice = $request->total_amount / $request->quantity;
+
+        // 2. Adjust Stock
         $stock = Stock::where('medicine_id', $purchase->medicine_id)->first();
 
-        // Reverse the old purchase quantity from stock, then add the new quantity
-        $stock->quantity = ($stock->quantity - $purchase->quantity) + $request->quantity;
-        $stock->save();
+        if ($stock) {
+            // Reverse old quantity and add new quantity
+            $stock->quantity = ($stock->quantity - $purchase->quantity) + $request->quantity;
+            $stock->save();
+        }
 
-        // 2. Update the Purchase Record
+        // 3. Update the Purchase Record
         $purchase->update([
             'supplier_name' => $request->supplier_name,
             'medicine_id'   => $request->medicine_id,
             'quantity'      => $request->quantity,
             'total_amount'  => $request->total_amount,
-            'purchase_price' => $request->total_amount / $request->quantity,
+            'price'         => $unitPrice, // Changed from 'purchase_price' to 'price' to match your migration
             'expiry_date'   => $request->expiry_date,
         ]);
 

@@ -53,11 +53,18 @@
                             value="{{ $purchase->expiry_date ? \Carbon\Carbon::parse($purchase->expiry_date)->format('Y-m-d') : '' }}">
                         </div>
 
+                        {{-- <div class="bg-light p-3 rounded text-center border mb-4">
+                            <span class="text-muted small d-block">Cost per Unit</span>
+                            <h3 class="mb-0 fw-bold text-dark">
+                                TK <span id="unitPriceDisplay">{{ number_format($purchase->total_amount / $purchase->quantity, 2) }}</span>
+                            </h3>
+                        </div> --}}
                         <div class="bg-light p-3 rounded text-center border mb-4">
                             <span class="text-muted small d-block">Cost per Unit</span>
                             <h3 class="mb-0 fw-bold text-dark">
                                 TK <span id="unitPriceDisplay">{{ number_format($purchase->total_amount / $purchase->quantity, 2) }}</span>
                             </h3>
+                            <input type="hidden" name="price" id="unitPriceInput" value="{{ $purchase->price }}">
                         </div>
 
                         <div class="d-grid gap-2">
@@ -77,15 +84,19 @@
     const qtyInput = document.getElementById('qty');
     const totalInput = document.getElementById('total');
     const unitPriceDisplay = document.getElementById('unitPriceDisplay');
+    const unitPriceInput = document.getElementById('unitPriceInput'); // Get the hidden input
 
     function updateUnitPrice() {
         const qty = parseFloat(qtyInput.value) || 0;
         const total = parseFloat(totalInput.value) || 0;
+        let unitPrice = 0;
+
         if (qty > 0) {
-            unitPriceDisplay.innerText = (total / qty).toFixed(2);
-        } else {
-            unitPriceDisplay.innerText = "0.00";
+            unitPrice = (total / qty).toFixed(2);
         }
+
+        unitPriceDisplay.innerText = unitPrice;
+        unitPriceInput.value = unitPrice; // Update the hidden input value
     }
 
     qtyInput.addEventListener('input', updateUnitPrice);
