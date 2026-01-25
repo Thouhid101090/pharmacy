@@ -36,7 +36,7 @@ class PurchaseController extends Controller
                     });
             });
         }
-        $purchases = $query->latest()->paginate(100);
+        $purchases = $query->latest()->paginate(10);
 
         return view('purchases.index', compact('purchases', 'dailyPurchase', 'monthlyPurchase'));
     }

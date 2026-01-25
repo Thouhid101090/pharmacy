@@ -10,9 +10,23 @@ class StockController extends Controller
 {
     public function index()
     {
-        $stocks = Stock::with('medicine')->get();
+        $stocks = Stock::with('medicine')->latest(10)->get();
         return view('stocks.index', compact('stocks'));
     }
+
+
+//     public function index()
+// {
+//     $stocks = Stock::with('medicine')->get();
+
+//     // TEMPORARY DEBUG: Find stocks missing a medicine
+//     $missing = $stocks->filter(fn($s) => is_null($s->medicine));
+//     if ($missing->count() > 0) {
+//         dd("Missing medicine for Stock IDs: " . $missing->pluck('id'));
+//     }
+
+//     return view('stocks.index', compact('stocks'));
+// }
     public function search(Request $request)
     {
         $query = $request->input('query');
