@@ -10,7 +10,7 @@ class StockController extends Controller
 {
     public function index()
     {
-        $stocks = Stock::with('medicine')->latest(10)->get();
+        $stocks = Stock::with('medicine')->latest()->paginate(10);
         return view('stocks.index', compact('stocks'));
     }
 
