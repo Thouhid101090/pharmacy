@@ -52,27 +52,40 @@
             <ul class="nav flex-column mt-4">
 
                 @auth
-                <li class="nav-item">
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button class="nav-link btn btn-link text-white">Logout</button>
-                    </form>
-                </li>
+                    <li class="nav-item">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button class="nav-link btn btn-link text-white">Logout</button>
+                        </form>
+                    </li>
 
-                <li class="nav-item mb-2"><a href="{{ url('/home') }}" class="nav-link text-white">Dashboard</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('medicines.index') }}" class="nav-link text-white">Medicines</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('purchases.index') }}" class="nav-link text-white">Purchases</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('sales.index') }}" class="nav-link text-white">Sales</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('stocks.index') }}" class="nav-link text-white">Stock</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('reports.index') }}" class="nav-link text-white">Reports</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('accounts.index') }}" class="nav-link text-white">Accounts</a></li>
-                <li class="nav-item mb-2"><a href="{{ route('extra_income.index') }}" class="nav-link text-white">Extra Income</a></li>
+                    <li class="nav-item mb-2"><a href="{{ url('/home') }}" class="nav-link text-white">Dashboard</a></li>
 
-                @if(auth()->user()->role == 'superadmin')
-                    <li class="nav-item mb-2"><a href="{{ route('investors.index') }}" class="nav-link text-white">Investors</a></li>
-                    <li class="nav-item mb-2"><a href="{{ route('investments.index') }}" class="nav-link text-white">Investments</a></li>
-                    <li class="nav-item mb-2"><a href="{{ route('users.index') }}" class="nav-link text-white">Users</a></li>
-                @endif
+                    <li class="nav-item mb-2"><a href="{{ route('purchases.index') }}"
+                            class="nav-link text-white">Purchases</a></li>
+                    <li class="nav-item mb-2"><a href="{{ route('sales.index') }}" class="nav-link text-white">Sales</a>
+                    </li>
+                    <li class="nav-item mb-2"><a href="{{ route('stocks.index') }}" class="nav-link text-white">Stock</a>
+                    </li>
+                    <li class="nav-item mb-2"><a href="{{ route('extra_income.index') }}" class="nav-link text-white">Extra
+                            Income</a></li>
+
+                    @if (auth()->user()->role == 'superadmin')
+                        <li class="nav-item mb-2"><a href="{{ route('medicines.index') }}"
+                                class="nav-link text-white">Medicines</a></li>
+                        <li class="nav-item mb-2"><a href="{{ route('investors.index') }}"
+                                class="nav-link text-white">Investors</a></li>
+                        <li class="nav-item mb-2"><a href="{{ route('investments.index') }}"
+                                class="nav-link text-white">Investments</a></li>
+
+                        <li class="nav-item mb-2"><a href="{{ route('accounts.index') }}"
+                                class="nav-link text-white">Accounts</a></li>
+                        <li class="nav-item mb-2"><a href="{{ route('reports.index') }}"
+                                class="nav-link text-white">Reports</a>
+                        <li class="nav-item mb-2"><a href="{{ route('users.index') }}"
+                                class="nav-link text-white">Users</a></li>
+                        </li>
+                    @endif
 
                 @endauth
             </ul>
